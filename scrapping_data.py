@@ -34,3 +34,16 @@ def get_topics_info(url):
         topic_links.append(topic.find("a").get("href"))
         topic_titles.append(topic.find("b").get_text())
     return topic_titles, topic_links
+
+#print(get_topics_info(("https://www.kdnuggets.com/")))
+
+# Fonction pour récupérer les liens des articles d'un topic et son titre
+def get_article_info(url):
+    bsobj = get_bsobj_from_url(url)
+    articles = bsobj.find("ul", class_ = "three_ul").find_all("li")
+    article_links = []
+    article_titles = []
+    for article in articles:
+        article_links.append(article.find("a").get("href"))
+        article_titles.append(article.find("b").get_text())
+    return article_titles, article_links
