@@ -87,3 +87,21 @@ def save_articles(topic_title, topic_link):
     print(f'{topic_title} saved')
     
 #save_articles("Data Science", "https://www.kdnuggets.com/tag/data-science")
+
+# Fonction qui à partir d'un lien de page, crée un dossier pour chaque topic et un fichier csv, en parallélisant avec dask
+
+def save_articles_multiprocess(url):
+    topic_titles, topic_links = get_topics_info(url)
+    tasks = [dask.delayed(save_articles)(title, link) for title, link in zip(topic_titles, topic_links)] # pas conseillé de faire un map dans ce car save_articles en utilise déja et est appelé encore ici en dask.delayed
+    # Exécution des tâches en parallèle
+    dask.compute(*tasks)   
+
+def main():
+    url = "https://www.kdnuggets.com/"
+    save_articles_multiprocess(url)
+    
+
+if __name__ == "__main__":  
+   from dask.distributed import Client
+   client = Client(timeout="30s", n_workers=4)   # Création d'un cluster de 4 workers. timeout de 30s permet de ne pas avoir de timeout lors de l'exécution des tâches
+   main()   
