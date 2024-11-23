@@ -1,6 +1,7 @@
 # Dans ce fichier, nous allons scrapper les données et les stocker dans différents fichiers
 
 # Importation des librairies
+# ! pip install requierments.txt
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
