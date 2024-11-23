@@ -7,6 +7,9 @@ from urllib.error import HTTPError, URLError
 import random
 import time
 import sys
+import dask
+import pandas as pd
+from pathlib import Path
 
 
 # Fonction pour récupérer le contenu html d'une page web
@@ -62,3 +65,25 @@ def extract_text(url):
         return f"Error extracting text from {url}: {str(e)}"
 
 # Fonction qui a partir d'un lien de page, crée un dossier pour un topic puis un fichier csv avec en première colonne le titre de l'article et en deuxième colonne le texte de l'article
+def save_articles(topic_title, topic_link):
+    topic_folder = topic_title.replace(" ", "_")
+    path = Path(f'projet/data/{topic_folder}')
+    # On vérifie si le dossier existe déjà
+    path.mkdir(parents=True, exist_ok=True)
+    # On récupère les liens des articles
+    article_titles, article_links = get_article_info(topic_link)
+    # On construit un dataframe avec les titres et les textes des articles
+    articles = []
+    
+    batch_size = 10  # On crée des batchs de 10 articles pour éviter de surcharger le serveur lors du dask.compute
+    for i in range(0, len(article_links), batch_size):
+        batch_links = article_links[i:i+batch_size]
+        batch_tasks = [dask.delayed(extract_text)(link) for link in batch_links]   # On parallelise l'extraction du texte des articles car il y'en a pleins
+        batch_results = dask.compute(*batch_tasks)
+        articles.extend(batch_results)
+    df = pd.DataFrame({'Titre': article_titles, 'Texte': articles})
+    # On sauvegarde le dataframe dans un fichier csv
+    df.to_csv(f'{path}/articles.csv', index=False)
+    print(f'{topic_title} saved')
+    
+#save_articles("Data Science", "https://www.kdnuggets.com/tag/data-science")
