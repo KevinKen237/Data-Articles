@@ -22,3 +22,15 @@ def get_bsobj_from_url(mon_url):
         sys.exit(e) # sortie du programme avec affichage de l’erreur
     bsobj = BeautifulSoup(html, "lxml") # en utilisant le parser de lxml
     return bsobj
+
+# Fonction pour récupérer les liens des topics et les titres
+def get_topics_info(url):
+    url = url + "topic"
+    bsobj = get_bsobj_from_url(url)
+    topics = bsobj.findAll("li", class_="li-has-thumb")
+    topic_links = []
+    topic_titles = []
+    for topic in topics:
+        topic_links.append(topic.find("a").get("href"))
+        topic_titles.append(topic.find("b").get_text())
+    return topic_titles, topic_links
