@@ -47,3 +47,18 @@ def get_article_info(url):
         article_links.append(article.find("a").get("href"))
         article_titles.append(article.find("b").get_text())
     return article_titles, article_links
+
+#print(get_article_info("https://www.kdnuggets.com/tag/data-science"))
+
+def extract_text(url):
+    try:
+        soup = get_bsobj_from_url(url)
+        texte = []
+        for p in soup.find("div", id="post-").find_all('p'):
+            texte.append(p.get_text())
+        texte = ' '.join(texte)
+        return texte
+    except Exception as e:
+        return f"Error extracting text from {url}: {str(e)}"
+
+# Fonction qui a partir d'un lien de page, crée un dossier pour un topic puis un fichier csv avec en première colonne le titre de l'article et en deuxième colonne le texte de l'article
