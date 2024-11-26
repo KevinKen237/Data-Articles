@@ -4,6 +4,11 @@
 import pandas as pd
 import os
 from functools import reduce
+import spacy
+import re
+from unidecode import unidecode
+import string
+from nltk.stem import PorterStemmer
 
 def get_topics_names():
     # On récupère les noms des dossiers dans data
@@ -25,3 +30,11 @@ def load_all_topics():
     return df
 
 df = load_all_topics()
+
+def racinisation(text):
+    stemmer = PorterStemmer()
+    # On tokenise le texte
+    tokens = text.split()
+    # On applique la racinisation
+    text = ' '.join([stemmer.stem(token) for token in tokens])
+    return text
