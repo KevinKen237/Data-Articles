@@ -10,6 +10,8 @@ import re
 from unidecode import unidecode
 import string
 from nltk.stem import PorterStemmer
+import dask
+import dask.dataframe as dd
 
 # Augmentez la limite de taille des champs
 csv.field_size_limit(10**9)
@@ -39,7 +41,7 @@ def load_all_topics():
     
     return df
 
-df = load_all_topics()
+#df = load_all_topics()
 
 def racinisation(text):
     stemmer = PorterStemmer()
@@ -70,4 +72,28 @@ def clean_text(text):
     text = ' '.join(tokens)
     return text 
 
-print(clean_text(str(df.Texte[0])))
+def clean_text_and_racinise(text):
+    return racinisation(clean_text(str(text)))
+
+#print(racinisation(clean_text(str(df.Texte[0]))))
+
+# Fonction de nettoyage des données en parallélisant le traitement
+def clean_data(df):
+    # Convertir le DataFrame en DataFrame Dask
+    ddf = dd.from_pandas(df, npartitions=10)
+    # Appliquer les opérations sur une colonne
+    ddf['Texte_clean'] = ddf['Texte'].map(clean_text_and_racinise, meta=str)
+    # Retourner un DataFrame pandas après traitement
+    return ddf.compute()
+
+#print(clean_data(df).head())
+
+def main():
+    df = load_all_topics()
+    df = clean_data(df)
+    df.to_pickle("clean_data.pkl")
+    
+if __name__ == "__main__":  
+   from dask.distributed import Client
+   client = Client(timeout="30s", n_workers=4)   # Création d'un cluster de 4 workers. timeout de 30s permet de ne pas avoir de timeout lors de l'exécution des tâches
+   main()

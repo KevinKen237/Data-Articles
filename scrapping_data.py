@@ -68,7 +68,7 @@ def extract_text(url):
 # Fonction qui a partir d'un lien de page, crée un dossier pour un topic puis un fichier csv avec en première colonne le titre de l'article et en deuxième colonne le texte de l'article
 def save_articles(topic_title, topic_link):
     topic_folder = topic_title.replace(" ", "_")
-    path = Path(f'projet/data/{topic_folder}')
+    path = Path(f'data/{topic_folder}')
     # On vérifie si le dossier existe déjà
     path.mkdir(parents=True, exist_ok=True)
     # On récupère les liens des articles
@@ -84,7 +84,7 @@ def save_articles(topic_title, topic_link):
         articles.extend(batch_results)
     df = pd.DataFrame({'Titre': article_titles, 'Texte': articles})
     # On sauvegarde le dataframe dans un fichier csv
-    df.to_csv(f'{path}/articles.csv', index=False)
+    df.to_pickle(f'{path}/articles.csv', index=False)
     print(f'{topic_title} saved')
     
 #save_articles("Data Science", "https://www.kdnuggets.com/tag/data-science")

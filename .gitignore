@@ -3,3 +3,8 @@ env
 
 # dossiers
 data/
+__pycache__/
+
+
+# fichiers
+clean_data.pkl
