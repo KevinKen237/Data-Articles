@@ -37,14 +37,14 @@ def load_topic(name,id):
 def save_topic(name, df):
     df.to_pickle(f"data/processed/{name}_processed.pkl")
 
-def load_all_topics(id):
+def load_save_articles(id):
     topics = get_topics_names()
     # On charge les dataframes de chaque topic a l'aide de map
-    dfs = list(map(load_topic, topics,id))
+    dfs = list(map(load_topic, topics,[id]))
+    
     # On concatène les dataframes
     df = reduce(lambda x, y: pd.concat([x, y]), dfs)
-    
-    return df
+    df.to_pickle(f"data/all_articles.pkl")
 
 
 def racinisation(text):
@@ -143,9 +143,22 @@ def save_word_count_topic():
 
 #print(word_count_topic("Career_Advice"))
 
+def save_count_all():
+    df = pd.read_pickle(f'data/all_articles.pkl')
+    list_texte = df['Texte_clean'].to_list()
+    text = ' '.join(list_texte)
+    word_count = Counter(text.split())
+    word_count = word_count.most_common(50)
+    dictio = dict(word_count)
+    with open(f'data/word_count/word_all_articles.json', 'w') as f:
+        json.dump(dictio, f, indent=4)
+    
+    
 def main():
-    #clean_all_data()
+    clean_all_data()
     save_word_count_topic()
+    load_save_articles("processed")
+    save_count_all()
     
 if __name__ == "__main__":  
    client = Client(timeout="30s", n_workers=4)   # Création d'un cluster de 4 workers. timeout de 30s permet de ne pas avoir de timeout lors de l'exécution des tâches
