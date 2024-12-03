@@ -12,6 +12,7 @@ from nltk.stem import PorterStemmer
 import dask.dataframe as dd
 from pathlib import Path
 from dask.distributed import Client
+from collections import Counter
 
 
 
@@ -109,10 +110,20 @@ def clean_all_data():
     # On nettoie les données de chaque topic avec un map
     list(map(clean_data, topics))
     
-        
-    
 
 #print(clean_data(df).head())
+
+def word_count_topic(topic):
+    df = pd.read_pickle(f'data/processed/{topic}_processed.pkl')
+    # mettre dans une liste la colonne Texte_clean
+    list_texte = df['Texte_clean'].to_list()
+    # concaténer les éléments de la liste
+    text = ' '.join(list_texte)
+    # compter les mots avec Counter
+    word_count = Counter(text.split())
+    return word_count
+
+print(word_count_topic("Data_Science"))
 
 def main():
     clean_all_data()
