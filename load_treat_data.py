@@ -13,6 +13,7 @@ import dask.dataframe as dd
 from pathlib import Path
 from dask.distributed import Client
 from collections import Counter
+import json
 
 
 
@@ -121,12 +122,30 @@ def word_count_topic(topic):
     text = ' '.join(list_texte)
     # compter les mots avec Counter
     word_count = Counter(text.split())
-    return word_count
+    # Conserver les 50 mots les plus fréquents
+    word_count = word_count.most_common(50)
+    return dict(word_count)
 
-print(word_count_topic("Data_Science"))
+def save_word_count_topic():
+    dict = {}
+    topics = get_topics_names()
+    for topic in topics:
+        dict[topic] = word_count_topic(topic)
+        
+    path = Path(f'data/word_count')
+    # On vérifie si le dossier existe déjà et ce n'est pas le cas on le crée
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
+    # On sauvegarde le dictionnaire dans un fichier json
+    with open(f'data/word_count/word_count.json', 'w') as f:
+        json.dump(dict, f, indent=4)
+    
+
+#print(word_count_topic("Career_Advice"))
 
 def main():
-    clean_all_data()
+    #clean_all_data()
+    save_word_count_topic()
     
 if __name__ == "__main__":  
    client = Client(timeout="30s", n_workers=4)   # Création d'un cluster de 4 workers. timeout de 30s permet de ne pas avoir de timeout lors de l'exécution des tâches

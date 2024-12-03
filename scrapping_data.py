@@ -107,3 +107,8 @@ if __name__ == "__main__":
    from dask.distributed import Client
    client = Client(timeout="30s", n_workers=4)   # Création d'un cluster de 4 workers. timeout de 30s permet de ne pas avoir de timeout lors de l'exécution des tâches
    main()   
+   
+# Scrapping: environ 9 minutes pour scraper les données de 12 topics
+
+
+    
