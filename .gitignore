@@ -4,6 +4,7 @@ env
 # dossiers
 data/
 __pycache__/
+credentials/
 
 
 # fichiers
