@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import json
 import numpy as np
-
+from load_treat_data import get_topics_names
 
 
 def word_cloud_all():
@@ -21,7 +21,7 @@ def word_cloud_all():
 def word_cloud_topic(topic):
     with open('data/word_count/word_count.json') as json_file:
         dic = json.load(json_file)
-        print(dic)
+        
     # On filtre le dictionnaire pour ne garder que les mots du topic
     dic = dic[topic]
     x,y = np.ogrid[:400,:400]
@@ -33,8 +33,14 @@ def word_cloud_topic(topic):
                             colormap="Dark2").generate_from_frequencies(dic)
     return wordcloud
 
-plt.figure(figsize = (8, 8), facecolor = None)
-plt.imshow(word_cloud_topic("Data_Science"), interpolation="bilinear")
-plt.axis("off")
-plt.tight_layout(pad = 0)
-plt.show()
+def volume_articles():
+    topics = get_topics_names()
+    volume = {}
+    for topic in topics:
+        df = pd.read_pickle(f'data/processed/{topic}_processed.pkl')
+        volume[topic] = len(df)
+    return volume
+
+
+
+print(volume_articles())    
