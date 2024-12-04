@@ -41,6 +41,8 @@ def volume_articles():
         volume[topic] = len(df)
     return volume
 
-
+def total_articles():
+    df = pd.read_pickle('data/all_articles.pkl')
+    return len(df)
 
 print(volume_articles())    
