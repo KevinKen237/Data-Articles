@@ -35,14 +35,18 @@ def word_cloud_topic(topic):
 
 def volume_articles():
     topics = get_topics_names()
-    volume = {}
+    volume = []
     for topic in topics:
         df = pd.read_pickle(f'data/processed/{topic}_processed.pkl')
-        volume[topic] = len(df)
+        volume.append(len(df))
+    # On crée un DataFrame avec les topics et le volume d'articles
+    volume = pd.DataFrame({'Topics': topics, 'Volume': volume})
     return volume
 
 def total_articles():
     df = pd.read_pickle('data/all_articles.pkl')
     return len(df)
 
-print(volume_articles())    
+def filter_topic(topic):
+    df = pd.read_pickle(f'data/all_articles.pkl')
+    return df
