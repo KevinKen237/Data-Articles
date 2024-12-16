@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import utilities_function as uf
 import plotly.express as px
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from load_treat_data import get_topics_names
+
 #import plotly.graph_objs as go
 topics = get_topics_names()
 # Page configuration
@@ -102,7 +103,9 @@ def home_page():
     fig = uf.word_cloud_all()
     st.pyplot(fig)  # Afficher dans Streamlit
 
+
 def search_articles():
+    import model  # Ainsi, ce n'est que lorsque l'on est sur cet onglet que le modèle est chargé
     """Onglet de recherche d'articles"""
     st.header("🔍 Recherche d'Articles")
     
@@ -111,6 +114,7 @@ def search_articles():
     
     with search_col1:
         search_query = st.text_input("Entrez des mots-clés ou des thèmes")
+        st.write("Cela peut prendre quelques secondes pour afficher les résultats")
     
     with search_col2:
         topics0 = [topic.replace("_"," ") for topic in get_topics_names()]
@@ -121,8 +125,29 @@ def search_articles():
         if category != "Tous les Topics":
             fig = uf.word_cloud_topic(category.replace(" ","_"))
             st.pyplot(fig)
+            
+    # Affichage du texte après avoir reçu l'entrée de l'utilisateur sur search_query
+    if search_query:
+        st.subheader("Recommandation")    
+        if category == "Tous les Topics":
+            print("il ne veut pas faire de filtre")
+            titre_recom, texte_recom, topic_recom = uf.systèmes_de_recommandation(search_query)
+            for i in range(len(titre_recom)):
+                st.text_area(
+                    label=f"Topic : {topic_recom[i].replace('_', ' ')}", 
+                    value=f"Titre : {titre_recom[i]}\n\n{model.resume_article(texte_recom[i])}", 
+                    height=300
+                )
+        else:
+            print("il veut faire un filtre")
+            titre_recom, texte_recom, topic_rec = uf.systèmes_de_recommandation(search_query, category)
+            for i in range(len(titre_recom)):
+                st.text_area(
+                    label=f"Titre : {titre_recom[i]}", 
+                    value=model.resume_article(texte_recom[i]), 
+                    height=300
+                )
     
-    st.write("Fonctionnalité de recherche à implémenter")
 
 def trends_visualization():
     """Onglet de visualisation des tendances"""

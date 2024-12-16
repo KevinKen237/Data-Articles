@@ -15,7 +15,7 @@ from dask.distributed import Client
 from collections import Counter
 import json
 
-
+stemmer = PorterStemmer()
 
 pd.set_option('display.max_colwidth', None)  # Afficher les colonnes en entier
 pd.set_option('display.max_rows', None)     # Afficher toutes les lignes (si nécessaire)
@@ -29,18 +29,23 @@ def get_topics_names(repository = "data/raw"):
     topics = [f.replace("_raw.pkl", "") for f in os.listdir(repository)]
     return topics
 
+topics = get_topics_names()
+
 # Charger un topic spécifique
 def load_topic(name,id):
-   return pd.read_pickle(f"data/{id}/{name}_{id}.pkl")
+   df = pd.read_pickle(f"data/{id}/{name}_{id}.pkl")
+   # Ajout de la colonne topic
+   df['topic'] = name
+   return df
 
 # Sauvegarder un topic spécifique
 def save_topic(name, df):
     df.to_pickle(f"data/processed/{name}_processed.pkl")
 
 def load_save_articles(id):
-    topics = get_topics_names()
+    #topics = get_topics_names()
     # On charge les dataframes de chaque topic a l'aide de map
-    dfs = list(map(load_topic, topics,[id]))
+    dfs = [load_topic(topic, id) for topic in topics]
     
     # On concatène les dataframes
     df = reduce(lambda x, y: pd.concat([x, y]), dfs)
@@ -48,7 +53,6 @@ def load_save_articles(id):
 
 
 def racinisation(text):
-    stemmer = PorterStemmer()
     # On tokenise le texte
     tokens = text.split()
     # On applique la racinisation
@@ -92,7 +96,7 @@ def clean_data(name):
     ddf = dd.from_pandas(df, npartitions=10)
     # Appliquer les opérations sur une colonne
     ddf = ddf.assign(
-    Texte_clean=lambda df: df['Titre'].map(clean_text, meta=('Texte', 'str')),
+    Texte_clean=lambda df: df['Texte'].map(clean_text, meta=('Texte', 'str')),
     Texte_clean_racine=lambda df: df['Texte'].map(clean_text_and_racinise, meta=('Texte', 'str'))
     )
     # Retourner un DataFrame pandas après traitement
@@ -103,7 +107,7 @@ def clean_data(name):
 
 
 def clean_all_data():
-    topics = get_topics_names()
+    #topics = get_topics_names()
     path = Path(f'data/processed')
     # On vérifie si le dossier existe déjà et ce n'est pas le cas on le crée
     if not path.exists():
@@ -128,7 +132,7 @@ def word_count_topic(topic):
 
 def save_word_count_topic():
     dict = {}
-    topics = get_topics_names()
+    #topics = get_topics_names()
     for topic in topics:
         dict[topic] = word_count_topic(topic)
         
@@ -156,9 +160,9 @@ def save_count_all():
     
 def main():
     clean_all_data()
-    save_word_count_topic()
+    #save_word_count_topic()
     load_save_articles("processed")
-    save_count_all()
+    #save_count_all()
     
 if __name__ == "__main__":  
    client = Client(timeout="30s", n_workers=4)   # Création d'un cluster de 4 workers. timeout de 30s permet de ne pas avoir de timeout lors de l'exécution des tâches
