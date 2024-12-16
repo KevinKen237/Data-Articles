@@ -5,7 +5,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 from load_treat_data import get_topics_names
 #import plotly.graph_objs as go
-
+topics = get_topics_names()
 # Page configuration
 st.set_page_config(
     page_title="Data Science Blog Explorer",
@@ -99,14 +99,7 @@ def home_page():
         st.plotly_chart(fig, key="Volume d'articles")  # Affichage du graphique Plotly
         
     # Word cloud of all articles
-    wordcloud = uf.word_cloud_all()
-
-    # Créer une figure matplotlib
-    fig, ax = plt.subplots(figsize=(8, 6))  # Ajustez la taille si besoin
-    ax.imshow(wordcloud, interpolation='bilinear')
-    # Donner un titre à la figure
-    ax.set_title("Word of DATA", fontsize=16)
-    ax.axis('off')  # Désactiver les axes
+    fig = uf.word_cloud_all()
     st.pyplot(fig)  # Afficher dans Streamlit
 
 def search_articles():
@@ -120,9 +113,14 @@ def search_articles():
         search_query = st.text_input("Entrez des mots-clés ou des thèmes")
     
     with search_col2:
+        topics0 = [topic.replace("_"," ") for topic in get_topics_names()]
+        topics0.insert(0, "Tous les Topics")
         category = st.selectbox("Catégorie", 
-             get_topics_names()
+            topics0
         )
+        if category != "Tous les Topics":
+            fig = uf.word_cloud_topic(category.replace(" ","_"))
+            st.pyplot(fig)
     
     st.write("Fonctionnalité de recherche à implémenter")
 
