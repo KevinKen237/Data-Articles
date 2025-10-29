@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import json
 import numpy as np
-from load_treat_data import get_topics_names, clean_text_and_racinise
+from load_treat_data import get_topics_names, clean_text
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import time
@@ -51,29 +51,33 @@ def volume_articles():
     topics = get_topics_names()
     volume = []
     for topic in topics:
-        df = pd.read_pickle(f'data/processed/{topic}_processed.pkl')
+        df = pd.read_csv(f'data/processed/{topic}_processed.csv')
         volume.append(len(df))
     # On crée un DataFrame avec les topics et le volume d'articles
     volume = pd.DataFrame({'Topics': topics, 'Volume': volume})
     return volume
 
 def total_articles():
-    df = pd.read_pickle('data/all_articles.pkl')
+    df = pd.read_csv('data/all_articles.csv')
     return len(df)
 
 def filter_topic(topic):
-    df = pd.read_pickle(f'data/all_articles.pkl')
+    df = pd.read_csv('data/all_articles.csv')
+    # On filtre le dataframe pour ne garder que les lignes avec "topic" dans la colonne "topic"
+    df = df[df['topic'] == topic]
     return df
 
 def systèmes_de_recommandation(query, topic=None):
     debut = time.time()
+    #print(topic)
     if topic:
         df = filter_topic(topic)
     else:
-        df = pd.read_pickle('data/all_articles.pkl')
+        df = pd.read_csv('data/all_articles.csv')
+       
     # On commence par mettre dans une liste (nos documents) les textes des articles
-    documents = df.Texte_clean_racine.tolist()
-
+    documents = df.Texte_clean.fillna('').astype(str).str.strip().tolist()
+    
     # On vectorise les documents
     vectorizer2 = TfidfVectorizer(lowercase=True, stop_words=None,
                                 ngram_range=(1, 1),
@@ -83,7 +87,7 @@ def systèmes_de_recommandation(query, topic=None):
     dtm = vectorizer2.fit_transform(documents)
     
     # On effectue le prétraitement de la requête
-    query = clean_text_and_racinise(query)
+    query = clean_text(query)
     # On vectorise la requête
     requete_vect = vectorizer2.transform([query])
     # On calcule la similarité cosinus entre la requête et les documents
@@ -94,14 +98,8 @@ def systèmes_de_recommandation(query, topic=None):
     titre = [df.iloc[i].Titre for i in indices]
     texte = [df.iloc[i].Texte for i in indices]
     topic = [df.iloc[i].topic for i in indices]
+    lien = [df.iloc[i].Liens for i in indices]  
     fin = time.time()
     print(f"Temps d'exécution système de recommandation : {fin - debut} secondes")
-    return titre, texte, topic
+    return titre, texte, topic, lien
     
-    
-# Test de la fonction systèmes_de_recommandation
-#titre_recom, texte_recom, topic_recom = systèmes_de_recommandation("Career", topic="Career_Advice")
-
-#print(f"Titre : {titre_recom[0]}, Topic : {topic_recom[0]}, {texte_recom[0]}")
-    
-
