@@ -9,7 +9,6 @@ import re
 from unidecode import unidecode
 import string
 from nltk.stem import PorterStemmer
-import dask.dataframe as dd
 from pathlib import Path
 from dask.distributed import Client
 from collections import Counter

@@ -1,0 +1,29 @@
+# coeur
+streamlit==1.40.2
+pandas==2.2.3
+numpy==1.26.4          # (compatible scikit-learn 1.5)
+scikit-learn==1.5.2
+
+# texte / scraping
+beautifulsoup4==4.12.3
+lxml==5.3.0
+requests==2.32.3
+unidecode==1.3.8
+
+# affichage / viz
+plotly==5.24.1
+matplotlib==3.9.3
+wordcloud==1.9.4
+pillow==11.0.0
+
+# NLP (si tu utilises ces fonctions)
+spacy==3.8.2
+# modèle spaCy FR/EN : installe via wheel (exemple pour EN)
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+nltk==3.9.1
+
+# dask (si tu en as besoin côté cloud)
+dask[distributed]==2024.11.2
+
+# client ollama (OPTIONNEL, seulement si tu as un serveur distant)
+ollama==0.6.0

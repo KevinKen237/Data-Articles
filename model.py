@@ -16,6 +16,7 @@ def resume_article_stream(text: str, max_words: int = 80):
         options={"num_predict": 130, "temperature": 0.7},
         stream=True,
     ):
+        
         part = chunk.get("response", "")
         if part is None:
             break

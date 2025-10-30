@@ -1,10 +1,8 @@
 import streamlit as st
-import pandas as pd
 import utilities_function as uf
 import model
 import itertools as it
 import plotly.express as px
-#import matplotlib.pyplot as plt
 from load_treat_data import get_topics_names
 
 #import plotly.graph_objs as go
@@ -236,10 +234,3 @@ def recommendations():
 # Point d'entrée principal
 if __name__ == "__main__":
     main()
-
-# Notes pour le développement ultérieur :
-# 1. Implémenter la logique de recherche avec filtrage
-# 2. Développer le moteur de recommandation (TF-IDF/embeddings)
-# 3. Créer des visualisations détaillées des tendances
-# 4. Intégrer une base de données ou des fichiers CSV
-# 5. Ajouter l'authentification si nécessaire

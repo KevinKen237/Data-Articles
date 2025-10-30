@@ -7,7 +7,6 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 import random
 import time, socket
-import sys
 import dask
 import pandas as pd
 from pathlib import Path
