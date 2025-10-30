@@ -83,7 +83,8 @@ def extract_text(url):
 def save_articles(topic_title, topic_link):
     print("5")
     topic_folder = topic_title.replace(" ", "_")
-    Path("data/raw").mkdir(parents=True, exist_ok=True)
+    path = Path(f"data/raw")
+    path.mkdir(parents=True, exist_ok=True)
     # On récupère les liens des articles
     article_titles, article_links = get_article_info(topic_link)
     # On construit un dataframe avec les titres et les textes des articles
