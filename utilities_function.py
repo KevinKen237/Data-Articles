@@ -43,7 +43,7 @@ def word_cloud_topic(topic):
     plt.subplots(figsize=(8, 6))
     plt.imshow(wordcloud, interpolation='bilinear')
     # Donner un titre à la figure
-    plt.title(f"{topic.replace("_"," ")}", fontsize=16)
+    plt.title(f"{topic.replace('_','' '')}", fontsize=16)
     plt.axis('off')  # Désactiver les axes
     return plt
 

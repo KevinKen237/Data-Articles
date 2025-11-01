@@ -1,0 +1,14 @@
+# Ne pas envoyer ces dossiers dans le build
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.ipynb_checkpoints/
+.git/
+.gitignore
+
+# Ces répertoires seront montés en volume à l'exécution, pas copiés dans l'image
+data/
+credentials/

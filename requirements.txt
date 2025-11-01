@@ -1,7 +1,7 @@
 # coeur
 streamlit==1.40.2
 pandas==2.2.3
-numpy==1.26.4          # (compatible scikit-learn 1.5)
+numpy==1.26.4          
 scikit-learn==1.5.2
 
 # texte / scraping
@@ -19,7 +19,7 @@ pillow==11.0.0
 # NLP (si tu utilises ces fonctions)
 spacy==3.8.2
 # modèle spaCy FR/EN : installe via wheel (exemple pour EN)
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 nltk==3.9.1
 
 # dask (si tu en as besoin côté cloud)

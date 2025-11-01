@@ -2,9 +2,9 @@ import time, ollama
 import streamlit as st
 
 
-def resume_article_stream(text: str, max_words: int = 80):
+def resume_article_stream(text: str, max_words: int = 150):
     prompt = (
-        f"Génère un article en ≤ {max_words} à partir du texte ci-dessous. Sans titre.\n\n"
+        f"Génère un article en ≤ {max_words} à partir du texte ci-dessous. Sans titre. Objectif: susciter l'intérêt du lecteur.\n\n"
         f"{text}\n"
     )
 
@@ -13,7 +13,7 @@ def resume_article_stream(text: str, max_words: int = 80):
     for chunk in ollama.generate(
         model="mistral:instruct",
         prompt=prompt,
-        options={"num_predict": 130, "temperature": 0.7},
+        options={"num_predict": 180, "temperature": 0.7},
         stream=True,
     ):
         
