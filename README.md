@@ -15,7 +15,8 @@ Elle combine :
 - 🧠 **Recommandation de contenu** basée sur la similarité sémantique  
 - 🤖 **Résumé intelligent** généré par un modèle IA local (Mistral via Ollama)
 
-📸 [acceuil](screenshoots/app_home.png)
+📸 
+![acceuil](screenshoots/app_home.png)
 
 ---
 
@@ -148,7 +149,6 @@ Quelques captures d'écran pour illustrer les principales sections de l'applicat
 | Section | Capture d'écran |
 |----------|----------------|
 | 🏠 **Accueil / Dashboard** | ![Accueil](screenshoots/app_home.png) |
-| ☁️ **Nuage de mots** | ![Nuage de mots](screenshoots/wordcloud.png) |
 | 🧠 **Recommandation IA** | ![Recommandation IA](screenshoots/reco_ia.png) |
 | 📰 **Résumé IA (Mistral)** | ![Résumé IA](screenshoots/summary_stream.png) |
 
